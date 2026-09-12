@@ -23,25 +23,21 @@ $ cd langchain-academy
 ```
 Or, if you prefer, you can download a zip file [here](https://github.com/langchain-ai/langchain-academy/archive/refs/heads/main.zip).
 
+### Install uv
+This project uses [uv](https://docs.astral.sh/uv/) to manage the Python environment and dependencies.
+If you don't have uv installed, follow the installation instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
+
 ### Create an environment and install dependencies
-#### Mac/Linux/WSL
+uv will automatically create a `.venv` virtual environment and install the exact dependency
+versions pinned in `uv.lock`.
+#### Mac/Linux/WSL/Windows Powershell
 ```
-$ python3 -m venv lc-academy-env
-$ source lc-academy-env/bin/activate
-$ pip install -r requirements.txt
-```
-#### Windows Powershell
-```
-PS> python3 -m venv lc-academy-env
-PS> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-PS> .\lc-academy-env\Scripts\Activate.ps1
-PS> pip install -r requirements.txt
+$ uv sync
 ```
 
 ### Running notebooks
-If you don't have Jupyter set up, follow the installation instructions [here](https://jupyter.org/install).
 ```
-$ jupyter notebook
+$ uv run jupyter notebook
 ```
 
 ### Setting up env variables
@@ -79,10 +75,10 @@ It's easy to sign up and offers a very generous free tier. Some lessons (in Modu
 * Studio can be run locally and opened in your browser on Mac, Windows, and Linux.
 * See documentation [here](https://docs.langchain.com/langsmith/studio#local-development-server) on the local Studio development server. 
 * Graphs for LangGraph Studio are in the `module-x/studio/` folders for module 1-5.
-* To start the local development server, make sure your virtual environment is active and run the following command in your terminal in the `/studio` directory in each module:
+* To start the local development server, run the following command in your terminal in the `/studio` directory in each module (uv will use the environment created by `uv sync` at the repo root):
 
 ```
-langgraph dev
+uv run langgraph dev
 ```
 
 You should see the following output:
