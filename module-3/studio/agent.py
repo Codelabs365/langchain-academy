@@ -3,6 +3,8 @@ from langchain_openai import ChatOpenAI
 
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
+import os
+
 
 def add(a: int, b: int) -> int:
     """Adds a and b.
@@ -13,6 +15,7 @@ def add(a: int, b: int) -> int:
     """
     return a + b
 
+
 def multiply(a: int, b: int) -> int:
     """Multiplies a and b.
 
@@ -21,6 +24,7 @@ def multiply(a: int, b: int) -> int:
         b: second int
     """
     return a * b
+
 
 def divide(a: int, b: int) -> float:
     """Adds a and b.
@@ -31,18 +35,23 @@ def divide(a: int, b: int) -> float:
     """
     return a / b
 
+
 tools = [add, multiply, divide]
 
 # Define LLM with bound tools
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model=os.getenv("DEEPSEEK_V4_FLASH"), temperature=0)
 llm_with_tools = llm.bind_tools(tools)
 
 # System message
-sys_msg = SystemMessage(content="You are a helpful assistant tasked with writing performing arithmetic on a set of inputs.")
+sys_msg = SystemMessage(
+    content="You are a helpful assistant tasked with writing performing arithmetic on a set of inputs."
+)
+
 
 # Node
 def assistant(state: MessagesState):
-   return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
+    return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
+
 
 # Build graph
 builder = StateGraph(MessagesState)
