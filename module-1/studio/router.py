@@ -2,6 +2,8 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import MessagesState
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
+import os
+
 
 # Tool
 def multiply(a: int, b: int) -> int:
@@ -13,13 +15,22 @@ def multiply(a: int, b: int) -> int:
     """
     return a * b
 
+
 # LLM with bound tool
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(
+    model=os.environ.get("OPENAI_MODEL"),
+    base_url=os.environ.get("OPENAI_BASE_URL"),
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    temperature=0,
+    max_tokens=1000,
+)
 llm_with_tools = llm.bind_tools([multiply])
+
 
 # Node
 def tool_calling_llm(state: MessagesState):
     return {"messages": [llm_with_tools.invoke(state["messages"])]}
+
 
 # Build graph
 builder = StateGraph(MessagesState)
